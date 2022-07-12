@@ -1,129 +1,54 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+# 11 de julho de 2022, 23:34hs
+# 12 de outubro de 2021, 01:17hs
 
-# C extensions
-*.so
+# PEDRO LESSA
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+import re
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+print('\n**** insira um CPF completo (apenas números) ***\n')
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+ValorCPF = input('Digite o CPF: ') # receber entrada do CPF
+entrada = re.findall("\d", ValorCPF) # remover caracteres NÃO numéricos
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
+# validar quantidade de caracteres digitados
+if len(ValorCPF) > 14 or len(entrada) < 11 or len(entrada) > 11:
+    print('CPF INVÁLIDO')
 
-# Translations
-*.mo
-*.pot
+# verificar se todos os dígitos são iguais
+else:
+    valid = 0
+    for dig in range(0, 11):
+        valid += int(entrada[dig])
+        dig += 1
+    if int(entrada[0]) == valid / 11:
+        print("CPF INVÁLIDO")
 
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
+    # rotina de cálculos do dígito verificador do CPF
+    else:
+        # verificação do 10º dígito verificador
+        soma = 0
+        count = 10
+        for i in range(0, len(entrada)-2):
+            soma = soma + (int(entrada[i])*count)
+            i+=1
+            count-=1
+        dg1 = 11-(soma%11)
+        if dg1 >= 10:
+            dg1 = 0
 
-# Flask stuff:
-instance/
-.webassets-cache
+        # verificação do 11º dígito verificador
+        soma = 0
+        count = 10
+        for j in range(1, len(entrada)-1):
+            soma = soma + (int(entrada[j])*count)
+            j+=1
+            count-=1
+        dg2 = 11-(soma%11)
+        if dg2 >= 10:
+            dg2 = 0
 
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-.python-version
-
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
+        # mensagem ao usuário
+        if int(entrada[9]) != dg1 or int(entrada[10]) != dg2:
+            print("CPF INVÁLIDO")
+        else:
+            print('*** CPF VÁLIDO ***')
